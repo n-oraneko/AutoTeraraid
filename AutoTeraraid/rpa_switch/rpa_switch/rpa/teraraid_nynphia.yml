@@ -1,0 +1,368 @@
+##############################################
+#rpaファイル
+#
+# テラレイドランダム自動周回(ニンフィア)
+# 2022/1/2
+#　
+# capture borard setting
+capture_borad: 0
+#2  -> 上下ともに1/2になる
+capture_image_quality: 2
+# usb setting
+baudrate: 115200
+serial_port: COM6
+##################
+
+
+### SETTINGS
+# 周回数  -1:endless
+loop: -1
+# step時間[s]
+step_sec: 0.01
+# tap time
+tap_sec: 0.1
+# 同期のために破棄するフレーム設定
+waste_frame_num: 5
+waste_frame_sleep: 0.01
+
+#ocr toolのパス
+oct_tool: "D:\\Program Files\\tesseract"
+
+### START
+#start trigger #このトリガがくるまで何もしない
+# True:トリガで管理。　False:すぐに開始
+is_start_trigger: False
+
+### END
+#end trigger #このトリガが来ると一巡終了
+# True:トリガで管理。　False:定常処理が終わると終了
+is_end_trigger: False
+
+### ERROR
+#error trigger #異常が発生し、画面がフリーズした際など
+# 同じ画面がcount数だけ起きると異常と判断
+is_error_trigger: True
+error_trigger:
+ count: 6000
+ reliability: 20
+ scene:
+  -
+   type: tap #tap or press
+   button:
+    - HOME
+  -
+   type: wait
+   time: 5     
+  -
+   type: tap #tap or press
+   button:
+    - X
+  -
+   type: tap #tap or press
+   button:
+    - A
+  -
+   type: wait
+   time: 5
+  -
+   type: tap #tap or press
+   button:
+    - A
+  -
+   type: tap #tap or press
+   button:
+    - A
+
+### SCENARIO 
+#定常処理
+scenario:
+ #秒指定のイベント（同じ動作）
+ scene:
+ -
+  type: tap #tap or press
+  button:
+   - A
+ -
+  type: tap #tap or press
+  button:
+   - X
+
+
+### EVENT 
+#定常処理中に割り込みし、定常シナリオを上書きする。上が優先
+#event: 
+# - event_trigger:
+
+#選択技
+#600,645,1750,1820
+#710,755,1750,1820
+#820,865,1750,1820
+#930,975,1750,1820
+event: 
+ - #1番上の技が黄色なら下に移動して実行
+   id: 1
+   image:
+    - 600
+    - 645
+    - 1750
+    - 1820
+   type: color
+   color_value:
+    - 0
+    - 213.0
+    - 255.0
+   reliability: 20
+   scenario:
+    scene:
+     - #デバフに移動
+       type: tap
+       button:
+        - DOWN
+     - #ウソ泣き実行
+       type: tap
+       button:
+        - A
+ - #2番上の技が黄色なら下に移動して実行
+   id: 2
+   image:
+    - 710
+    - 755
+    - 1750
+    - 1820
+   type: color
+   color_value:
+    - 0
+    - 213.0
+    - 255.0
+   reliability: 20
+   scenario:
+    scene:
+     - #デバフに移動
+       type: tap
+       button:
+        - DOWN
+     - #ウソ泣き実行
+       type: tap
+       button:
+        - A
+
+
+ #- #ボックスに保存
+ #  id: 3
+ #  image:
+ #   - 140
+ #   - 190
+ #   - 330
+ #   - 600
+ #  type: ocr
+ #  ocr_string: "ケモン" #ポケモン図鑑
+ #  scenario:
+ #   #
+ #   scene:
+ #    -
+ #      type: tap
+ #      button:
+ #       - B
+ #    -
+ #      type: tap
+ #      button:
+ #       - B
+ #    -
+ #      type: wait
+ #      time: 5     
+ #    -
+ #      type: tap
+ #      button:
+ #       - X
+
+ - #ランダムテラバトル選択
+   id: 4
+   image:
+    - 440
+    - 480
+    - 1600
+    - 1790
+   type: ocr
+   ocr_string: "あいことば"
+   scenario:
+    #
+    scene:
+     -
+       type: wait
+       time: 2
+     -
+       type: tap
+       button:
+        - DOWN
+     -
+       type: tap
+       button:
+        - LEFT
+     - #デバフに移動
+       type: tap
+       button:
+        - A
+
+ - #テラレイドの選択
+   id: 5
+   image:
+    - 270
+    - 300
+    - 400
+    - 450
+   type: color
+   color_value:
+    - 0
+    - 233.0
+    - 255.0
+   reliability: 20
+   scenario:
+    scene:
+     -
+       type: wait
+       time: 5
+     - #
+       type: tap
+       button:
+        - DOWN
+     - #
+       type: tap
+       button:
+        - A
+
+ - #あいことばにはいってしまったときに抜ける
+   id: -1
+   image:
+    - 50
+    - 130
+    - 150
+    - 600
+   type: ocr
+   ocr_string: "あい"
+   scenario:
+    #
+    scene:
+     -
+       type: tap
+       button:
+        - X
+     -
+       type: tap
+       button:
+        - B
+     -
+       type: wait
+       time: 15
+     - 
+       type: tap
+       button:
+        - B
+     -
+       type: tap
+       button:
+        - B
+     - 
+       type: tap
+       button:
+        - B
+
+ - #終了切り替え
+   id: 7
+   image:
+    - 940
+    - 1040
+    - 1780
+    - 1880
+   type: color
+   color_value:
+    - 127.0
+    - 168.0
+    - 145.0
+   reliability: 20
+   scenario:
+    #
+    scene:
+     -
+       type: wait
+       time: 20
+     -
+       type: tap
+       button:
+        - B
+     -
+       type: tap
+       button:
+        - B
+     -
+       type: wait
+       time: 5
+     -
+       type: tap
+       button:
+        - X
+
+ - #メニューでポケモンが選択されている。
+   id: 8
+   image:
+    - 195
+    - 280
+    - 438
+    - 547
+   type: color
+   color_value:
+    - 0.07
+    - 232.66
+    - 254.99
+   reliability: 20
+   scenario:
+    #
+    scene:
+     -
+       type: tap
+       button:
+        - RIGHT
+     -
+       type: tap
+       button:
+        - DOWN
+     -
+       type: tap
+       button:
+        - DOWN
+     -
+       type: tap
+       button:
+        - DOWN
+
+ - #切断の場合接続に戻す
+   id: -1
+   image:
+    - 1020
+    - 1060
+    - 1480
+    - 1710
+   type: ocr
+   ocr_string: "接" #インターネット接続
+   scenario:
+    #
+    scene:
+     -
+       type: tap
+       button:
+        - L
+     -
+       type: wait
+       time: 20
+     -
+       type: tap
+       button:
+        - B
+     -
+       type: tap
+       button:
+        - B
+     -
+       type: tap
+       button:
+        - B
+

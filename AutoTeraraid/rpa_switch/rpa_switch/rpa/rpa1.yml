@@ -1,0 +1,70 @@
+##############################################
+#rpaファイル
+#
+# 動作確認用ファイル
+# 2022/1/3
+#　
+# capture borard setting
+capture_borad: 0
+#2  -> 上下ともに1/2になる
+capture_image_quality: 2
+# usb setting
+baudrate: 115200
+serial_port: COM6
+##################
+
+
+### SETTINGS
+# 周回数  -1:endless
+loop: -1
+# step時間[s]
+step_sec: 0.01
+# tap time
+tap_sec: 0.1
+# 同期のために破棄するフレーム設定
+waste_frame_num: 5
+waste_frame_sleep: 0.01
+
+#ocr toolのパス
+oct_tool: "D:\\Program Files\\tesseract"
+
+### START
+#start trigger #このトリガがくるまで何もしない
+# True:トリガで管理。　False:すぐに開始
+is_start_trigger: False
+
+### END
+#end trigger #このトリガが来ると一巡終了
+# True:トリガで管理。　False:定常処理が終わると終了
+is_end_trigger: False
+
+### ERROR
+#error trigger #異常が発生し、画面がフリーズした際など
+# 同じ画面がcount数だけ起きると異常と判断
+is_error_trigger: False
+
+### SCENARIO 
+#定常処理
+scenario:
+ #秒指定のイベント（同じ動作）
+ scene:
+ -
+  type: stick
+  stick: left
+  x: 128
+  y: 0
+  time: 2
+ -
+  type: press
+  button:
+   - ZL
+ -
+  type: stick
+  stick: left
+  x: 128
+  y: 256
+  time: 2
+ -
+  type: release
+  button:
+   - ZL
